@@ -1,0 +1,123 @@
+# Generates and uploads an image of Robotics-Backend using the desired tag and branches
+name: Generate tagged RoboticsBackend image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: test
+      RA:
+        description: 'Branch of RoboticsAcademy'
+        required: true
+        default: master
+      RI:
+        description: 'Branch of Robotics Infrastructure'
+        required: true
+        default: noetic-devel
+      RAM:
+        description: 'Branch of Robotics Application Manager'
+        required: true
+        default: main
+      ROS:
+        description: 'ROS Distro (humble or noetic)'
+        required: true
+        default: noetic
+        type: choice
+        options:
+          - humble
+          - noetic
+
+jobs:
+  push_to_registry:
+    name: Run Test and Update Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo # checking our the code at current commit that triggers the workflow
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch-webserver-id }}
+          fetch-depth: 1
+
+#      - name: Cache dependency # caching dependency will make our build faster.
+#        uses: actions/cache@v3 # for more info checkout pip section documentation at https://github.com/actions/cache
+#        with:
+#          path: ~/.cache/pip
+#          key: ${{ runner.os }}-pip-${{ hashFiles('**/utils/requirements.txt') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pip-
+
+#      - name: Setup python environment # setting python environment to 3.8
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: '3.8'
+
+#      - name: Check Python version # checking the python version to see if 3.8 is installed.
+#        run: python --version
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build base image
+        run: |
+          apt-get update
+          cd scripts/RADI
+          if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
+            docker build -f Dockerfile.dependencies_humble -t jderobot/robotics-applications:dependencies-humble .
+          elif [ "${{ github.event.inputs.ROS }}" == "noetic" ]; then
+            docker build -f Dockerfile.dependencies_noetic -t jderobot/robotics-applications:dependencies-noetic .
+          else
+            echo "Incorrect ROS version"
+          fi
+
+      - name: Build and push RADI
+        run: |
+          cd scripts/RADI
+          if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
+            docker build --no-cache -f Dockerfile.humble \
+              --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
+              --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
+              --build-arg RAM=${{ github.event.inputs.RAM }} \
+              --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
+              --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
+              -t jderobot/robotics-academy:${{ github.event.inputs.tag }} .
+            docker push jderobot/robotics-academy:${{ github.event.inputs.tag }}
+          elif [ "${{ github.event.inputs.ROS }}" == "noetic" ]; then
+            docker build --no-cache -f Dockerfile.noetic \
+              --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
+              --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
+              --build-arg RAM=${{ github.event.inputs.RAM }} \
+              --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
+              --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
+              -t jderobot/robotics-academy:${{ github.event.inputs.tag }} .
+            docker push jderobot/robotics-academy:${{ github.event.inputs.tag }}
+          else
+            echo "Incorrect ROS version"
+          fi
+
+#      - name: Build base image
+#        uses: docker/build-push-action@v2
+#        with:
+#          push: true
+#          tags: localhost:5000/robotics-applications:dependencies-****
+#          context: business
+#          file: business/Dockerfile
+#      - name: Build and push RADI
+#        uses: docker/build-push-action@v2
+#        with:
+#          push: true
+#          tags: my-ecr-repo/service
+#          context: service
+#          file: service/Dockerfile
+#          build-args: |
+#            BASE_IMAGE=localhost:5000/my-project/base
