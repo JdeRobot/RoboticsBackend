@@ -11,11 +11,11 @@ on:
       RA:
         description: 'Branch of RoboticsAcademy'
         required: true
-        default: master
+        default: humble-devel
       RI:
         description: 'Branch of Robotics Infrastructure'
         required: true
-        default: noetic-devel
+        default: humble-devel
       RAM:
         description: 'Branch of Robotics Application Manager'
         required: true
