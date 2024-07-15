@@ -21,7 +21,7 @@ on:
         required: true
         default: main
       ROS:
-        description: 'ROS Distro (humble or noetic)'
+        description: 'ROS Distro (humble)'
         required: true
         default: humble
 
