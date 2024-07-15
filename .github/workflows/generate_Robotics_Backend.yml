@@ -23,11 +23,7 @@ on:
       ROS:
         description: 'ROS Distro (humble or noetic)'
         required: true
-        default: noetic
-        type: choice
-        options:
-          - humble
-          - noetic
+        default: humble
 
 jobs:
   push_to_registry:
@@ -71,29 +67,18 @@ jobs:
       - name: Build base image
         run: |
           apt-get update
-          cd scripts/RADI
+          cd scripts
           if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
             docker build -f Dockerfile.dependencies_humble -t jderobot/robotics-applications:dependencies-humble .
-          elif [ "${{ github.event.inputs.ROS }}" == "noetic" ]; then
-            docker build -f Dockerfile.dependencies_noetic -t jderobot/robotics-applications:dependencies-noetic .
           else
             echo "Incorrect ROS version"
           fi
 
       - name: Build and push RADI
         run: |
-          cd scripts/RADI
+          cd scripts
           if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
             docker build --no-cache -f Dockerfile.humble \
-              --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
-              --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
-              --build-arg RAM=${{ github.event.inputs.RAM }} \
-              --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
-              --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
-              -t jderobot/robotics-academy:${{ github.event.inputs.tag }} .
-            docker push jderobot/robotics-academy:${{ github.event.inputs.tag }}
-          elif [ "${{ github.event.inputs.ROS }}" == "noetic" ]; then
-            docker build --no-cache -f Dockerfile.noetic \
               --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
               --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
               --build-arg RAM=${{ github.event.inputs.RAM }} \
