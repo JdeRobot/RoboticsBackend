@@ -66,7 +66,7 @@ jobs:
 
       - name: Build base image
         run: |
-          apt-get update
+          sudo apt-get update
           cd scripts
           if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
             docker build -f Dockerfile.dependencies_humble -t jderobot/robotics-applications:dependencies-humble .
