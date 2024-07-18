@@ -25,6 +25,8 @@ This github action is prepared to package every image created by the Dockerfiles
 
 These files are located on the _scripts_ directory. These Dockerfiles are used by the github action to start creating the RA components that will be avaliable on a RB container such as GPU acceleration, OS, ROS dependencies and such.
 
+__NOTE:__ These dockerfiles comes from the mini_Radi scripts available on RoboticsAcademy. If those files are updated, then these should be too.
+
 ## Adding a new application to _Robotics Backend_ docker image.
 
 At the time this documentation is being written, RA is the only robotics application used on Unibotics-webserver. Nonetheless, there's future plans to add new apps such as BTStudio. The only requirements to do so is to add the necesarry dockerfiles to the _scripts_ directory and add the builiding of that new app into the Github Action.
