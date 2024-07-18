@@ -19,6 +19,12 @@ This github action is prepared to package every image created by the Dockerfiles
   2. The github action logs in the Dockerhub webpage using the __github actions secrets__.
   3. Then builds a base image with all the deppendencies used on robotics applications.
   4. Finally starts compiling and packaging every repo to create the RB image.
-  5. New RB image is pushed.
+  5. New RB image is pushed into Dockerhub.
 
 ## RA Dockerfiles
+
+These files are located on the _scripts_ directory. These Dockerfiles are used by the github action to start creating the RA components that will be avaliable on a RB container such as GPU acceleration, OS, ROS dependencies and such.
+
+## Adding a new application to _Robotics Backend_ docker image.
+
+At the time this documentation is being written, RA is the only robotics application used on Unibotics-webserver. Nonetheless, there's future plans to add new apps such as BTStudio. The only requirements to do so is to add the necesarry dockerfiles to the _scripts_ directory and add the builiding of that new app into the Github Action.
