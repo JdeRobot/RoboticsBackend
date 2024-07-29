@@ -19,7 +19,7 @@ on:
       RAM:
         description: 'Branch of Robotics Application Manager'
         required: true
-        default: main
+        default: humble-devel
       ROS:
         description: 'ROS Distro (humble)'
         required: true
