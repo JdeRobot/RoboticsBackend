@@ -91,9 +91,6 @@ jobs:
               --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
               -t jderobot/robotics-backend:${{ github.event.inputs.tag }} .
             docker push jderobot/robotics-backend:${{ github.event.inputs.tag }}
-            if [
-            docker image tag jderobot/robotics-backend:${{ github.event.inputs.tag }} jderobot/robotics-backend:latest
-            docker push jderobot/robotics-backend:latest
           else
             echo "Incorrect ROS version"
           fi
