@@ -8,6 +8,11 @@ on:
         description: 'Docker Image Tag'
         required: true
         default: test
+      latest:
+        description: 'Upload as latest'
+        type: boolean
+        required: true
+        default: false
       RA:
         description: 'Branch of RoboticsAcademy'
         required: true
@@ -64,31 +69,41 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build base image
-        run: |
-          sudo apt-get update
-          cd scripts
-          if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
-            docker build -f Dockerfile.dependencies_humble -t jderobot/robotics-applications:dependencies-humble .
-          else
-            echo "Incorrect ROS version"
-          fi
+      # - name: Build base image
+      #   run: |
+      #     sudo apt-get update
+      #     cd scripts
+      #     if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
+      #       docker build -f Dockerfile.dependencies_humble -t jderobot/robotics-applications:dependencies-humble .
+      #     else
+      #       echo "Incorrect ROS version"
+      #     fi
 
-      - name: Build and push RADI
+      # - name: Build and push RADI
+      #   run: |
+      #     cd scripts
+      #     if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
+      #       docker build --no-cache -f Dockerfile.humble \
+      #         --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
+      #         --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
+      #         --build-arg RAM=${{ github.event.inputs.RAM }} \
+      #         --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
+      #         --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
+      #         -t jderobot/robotics-backend:${{ github.event.inputs.tag }} .
+      #       docker push jderobot/robotics-backend:${{ github.event.inputs.tag }}
+      #       if [
+      #       docker image tag jderobot/robotics-backend:${{ github.event.inputs.tag }} jderobot/robotics-backend:latest
+      #       docker push jderobot/robotics-backend:latest
+      #     else
+      #       echo "Incorrect ROS version"
+      #     fi
+
+      - name: Upload as Latest
+        if:  ${{ inputs.latest }} 
         run: |
-          cd scripts
-          if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
-            docker build --no-cache -f Dockerfile.humble \
-              --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
-              --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
-              --build-arg RAM=${{ github.event.inputs.RAM }} \
-              --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
-              --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
-              -t jderobot/robotics-backend:${{ github.event.inputs.tag }} .
-            docker push jderobot/robotics-backend:${{ github.event.inputs.tag }}
-          else
-            echo "Incorrect ROS version"
-          fi
+            echo "Running"
+            # docker image tag jderobot/robotics-backend:${{ github.event.inputs.tag }} jderobot/robotics-backend:latest
+            # docker push jderobot/robotics-backend:latest
 
 #      - name: Build base image
 #        uses: docker/build-push-action@v2
