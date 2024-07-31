@@ -6,8 +6,9 @@ This repo purpose is to have all the necessary requirements to compile and push 
 
 This github action is prepared to package every image created by the Dockerfiles into a RoboticsBackend tagged docker image. This github action needs some inputs:
 
-  * Docker Image tag: The id of the tag of the RoboticsBackend image to pull from Dockerhub. It is usually a number followed by points __(ex: 4.63)__ unless it's a beta image, which should be tagged as 
-  __beta__ 
+  * Docker Image tag: The id of the tag of the RoboticsBackend image to pull from Dockerhub. It is usually a number followed by points __(ex: 4.6.3)__ unless it's a beta image, which should be tagged as 
+  __beta__
+  * Upload as latest: The id of the tag of the RoboticsBackend image is also set to latest to pull from Dockerhub. Check only if the image is desired to be used as the latest reference.
   * Branch of Robotics Academy: The branch of RoboticsAcademy repo that will be packaged. It's default value is _humble-devel_. Note that If you're creating a beta image of RB, you must specify the branch of      RA which has the desired changes.
   * Branch of RoboticsInfrastructure: The branch of RoboticsInfrastructure repo that will be packaged. It's default value is _humble-devel_.
   * Branch of RoboticsApplicationManager: The branch of RoboticsApplicationManager repo that will be packaged. It's default value is _humble-devel_.
