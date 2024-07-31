@@ -8,6 +8,11 @@ on:
         description: 'Docker Image Tag'
         required: true
         default: test
+      latest:
+        description: 'Upload as latest'
+        type: boolean
+        required: true
+        default: false
       RA:
         description: 'Branch of RoboticsAcademy'
         required: true
@@ -89,6 +94,12 @@ jobs:
           else
             echo "Incorrect ROS version"
           fi
+
+      - name: Upload as Latest
+        if:  ${{ inputs.latest }} 
+        run: |
+            docker image tag jderobot/robotics-backend:${{ github.event.inputs.tag }} jderobot/robotics-backend:latest
+            docker push jderobot/robotics-backend:latest
 
 #      - name: Build base image
 #        uses: docker/build-push-action@v2
