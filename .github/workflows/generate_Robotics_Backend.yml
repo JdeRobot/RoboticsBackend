@@ -90,7 +90,7 @@ jobs:
               --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
               --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
               -t jderobot/robotics-backend:${{ github.event.inputs.tag }} .
-            docker push jderobot/robotics-academy:${{ github.event.inputs.tag }}
+            docker push jderobot/robotics-backend:${{ github.event.inputs.tag }}
           else
             echo "Incorrect ROS version"
           fi
