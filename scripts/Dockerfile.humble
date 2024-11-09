@@ -57,4 +57,4 @@ WORKDIR /
 
 # Setting environment in both interactive or non-interactive shells
 ENV BASH_ENV /.env
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh", "-ns"]
