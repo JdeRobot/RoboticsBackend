@@ -13,10 +13,6 @@ on:
         type: boolean
         required: true
         default: false
-      RA:
-        description: 'Branch of RoboticsAcademy'
-        required: true
-        default: humble-devel
       RI:
         description: 'Branch of Robotics Infrastructure'
         required: true
@@ -84,7 +80,6 @@ jobs:
           cd scripts
           if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
             docker build --no-cache -f Dockerfile.humble \
-              --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
               --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
               --build-arg RAM=${{ github.event.inputs.RAM }} \
               --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
