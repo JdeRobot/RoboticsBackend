@@ -56,7 +56,7 @@ jobs:
       - name: Build and push RADI
         run: |
           cd scripts
-          docker build --no-cache -f Dockerfile.database \
+          docker build --no-cache -f Dockerfile.database_RA \
             --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
             --build-arg POSTGRES_DB=${{ github.event.inputs.Name }} \
             --build-arg POSTGRES_USER=${{ github.event.inputs.UserName }} \
