@@ -62,6 +62,7 @@ jobs:
             --build-arg POSTGRES_USER=${{ github.event.inputs.UserName }} \
             --build-arg POSTGRES_PASSWORD=${{ github.event.inputs.PASSWORD }} \
             -t jderobot/robotics-database:${{ github.event.inputs.tag }} .
+          docker push jderobot/robotics-database:${{ github.event.inputs.tag }}
       - name: Upload as Latest
         if:  ${{ inputs.latest }} 
         run: |
