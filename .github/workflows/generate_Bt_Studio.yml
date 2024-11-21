@@ -62,7 +62,7 @@ jobs:
           else
             echo "Incorrect ROS version"
           fi
-      - name: Build and push RADI
+      - name: Build and push BTDI
         run: |
           cd scripts
           if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
