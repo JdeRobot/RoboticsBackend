@@ -2,6 +2,28 @@
 name: Generate tagged Robotics Academy Database image
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: test
+        type: string
+      latest:
+        description: 'Upload as latest'
+        required: true
+        default: false
+        type: boolean
+      RA:
+        description: 'Branch of RoboticsAcademy'
+        required: true
+        default: humble-devel
+        type: string
+      RI:
+        description: 'Branch of Robotics Infrastructure for Universes Database'
+        required: true
+        default: database
+        type: string
   workflow_dispatch:
     inputs:
       tag:
@@ -18,7 +40,7 @@ on:
         required: true
         default: humble-devel
       RI:
-        description: 'Branch of Robotics Infrastructure'
+        description: 'Branch of Robotics Infrastructure for Universes Database'
         required: true
         default: database
 
