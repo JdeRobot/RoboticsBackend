@@ -1,26 +1,51 @@
 # Generates and uploads an image of Robotics Academy database using the desired tag and branches
-name: Generate tagged Robotics Academy Database image
+name: Generate tagged Bt Studio Database image
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: test
+        type: string
+      latest:
+        description: 'Upload as latest'
+        required: true
+        default: false
+        type: boolean
+      BT:
+        description: 'Branch of RoboticsAcademy'
+        required: true
+        default: main
+        type: string
+      RI:
+        description: 'Branch of Robotics Infrastructure'
+        required: true
+        default: database
+        type: string
   workflow_dispatch:
     inputs:
       tag:
         description: 'Docker Image Tag'
         required: true
         default: test
+        type: string
       latest:
         description: 'Upload as latest'
-        type: boolean
         required: true
         default: false
-      RA:
+        type: boolean
+      BT:
         description: 'Branch of RoboticsAcademy'
         required: true
-        default: humble-devel
+        default: main
+        type: string
       RI:
         description: 'Branch of Robotics Infrastructure'
         required: true
         default: database
+        type: string
 
 jobs:
   push_to_registry:
@@ -45,17 +70,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push RA database
+      - name: Build and push Bt Studio database
         run: |
           cd scripts
-          docker build --no-cache -f Dockerfile.database_RA \
+          docker build --no-cache -f Dockerfile.database_BT \
             --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
-            --build-arg ROBOTICS_ACADEMY=${{ github.event.inputs.RA }}\
+            --build-arg BT_STUDIO=${{ github.event.inputs.BT }}\
             --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
-            -t jderobot/robotics-database:${{ github.event.inputs.tag }} .
-          docker push jderobot/robotics-database:${{ github.event.inputs.tag }}
+            -t jderobot/bt-studio-database:${{ github.event.inputs.tag }} .
+          docker push jderobot/bt-studio-database:${{ github.event.inputs.tag }}
       - name: Upload as Latest
         if:  ${{ inputs.latest }} 
         run: |
-            docker image tag jderobot/robotics-database:${{ github.event.inputs.tag }} jderobot/robotics-database:latest
-            docker push jderobot/robotics-database:latest
+            docker image tag jderobot/bt-studio-database:${{ github.event.inputs.tag }} jderobot/bt-studio-database:latest
+            docker push jderobot/bt-studio-database:latest
