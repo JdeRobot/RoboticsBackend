@@ -44,6 +44,7 @@ jobs:
       RI: ${{ github.event.inputs.RI }}
       RAM: ${{ github.event.inputs.RAM }}
       ROS: ${{ github.event.inputs.ROS }}
+    secrets: inherit
   generate-Bt-Studio-database-docker-image:
     uses: ./.github/workflows/generate_Bt_Studio_Database.yml
     with:
@@ -51,3 +52,4 @@ jobs:
       latest: ${{ inputs.latest }}
       BT: ${{ github.event.inputs.BT }}
       RI: ${{ github.event.inputs.RIDB }}
+    secrets: inherit
