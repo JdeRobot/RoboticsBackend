@@ -10,9 +10,9 @@ on:
         default: test
       latest:
         description: 'Upload as latest'
-        type: boolean
         required: true
         default: true
+        type: boolean
       BT:
         description: 'Branch of BT-Studio'
         required: true
@@ -39,7 +39,7 @@ jobs:
     uses: ./.github/workflows/generate_Bt_Studio.yml
     with:
       tag: ${{ github.event.inputs.tag }}
-      latest: ${{ github.event.inputs.latest }}
+      latest: ${{ inputs.latest }}
       BT: ${{ github.event.inputs.BT }}
       RI: ${{ github.event.inputs.RI }}
       RAM: ${{ github.event.inputs.RAM }}
@@ -48,6 +48,6 @@ jobs:
     uses: ./.github/workflows/generate_Bt_Studio_Database.yml
     with:
       tag: ${{ github.event.inputs.tag }}
-      latest: ${{ github.event.inputs.latest }}
+      latest: ${{ inputs.latest }}
       BT: ${{ github.event.inputs.BT }}
       RI: ${{ github.event.inputs.RIDB }}
