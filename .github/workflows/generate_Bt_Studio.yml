@@ -2,33 +2,70 @@
 name: Generate tagged BT-Studio image
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: test
+        type: string
+      latest:
+        description: 'Upload as latest'
+        required: true
+        default: false
+        type: boolean
+      BT:
+        description: 'Branch of BT-Studio'
+        required: true
+        default: main
+        type: string
+      RI:
+        description: 'Branch of Robotics Infrastructure'
+        required: true
+        default: humble-devel
+        type: string
+      RAM:
+        description: 'Branch of Robotics Application Manager'
+        required: true
+        default: humble-devel
+        type: string
+      ROS:
+        description: 'ROS Distro (humble)'
+        required: true
+        default: humble
+        type: string
   workflow_dispatch:
     inputs:
       tag:
         description: 'Docker Image Tag'
         required: true
         default: test
+        type: string
       latest:
         description: 'Upload as latest'
-        type: boolean
         required: true
         default: false
+        type: boolean
       BT:
         description: 'Branch of BT-Studio'
         required: true
         default: main
+        type: string
       RI:
         description: 'Branch of Robotics Infrastructure'
         required: true
         default: humble-devel
+        type: string
       RAM:
         description: 'Branch of Robotics Application Manager'
         required: true
         default: humble-devel
+        type: string
       ROS:
         description: 'ROS Distro (humble)'
         required: true
         default: humble
+        type: string
 
 jobs:
   push_to_registry:

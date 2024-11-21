@@ -1,0 +1,53 @@
+# Generates and uploads an image of Robotics Academy database using the desired tag and branches
+name: Release new Bt Studio Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: test
+      latest:
+        description: 'Upload as latest'
+        type: boolean
+        required: true
+        default: true
+      BT:
+        description: 'Branch of BT-Studio'
+        required: true
+        default: main
+      RI:
+        description: 'Branch of Robotics Infrastructure'
+        required: true
+        default: humble-devel
+      RIDB:
+        description: 'Branch of Universes Database in Robotics Infrastructure'
+        required: true
+        default: database
+      RAM:
+        description: 'Branch of Robotics Application Manager'
+        required: true
+        default: humble-devel
+      ROS:
+        description: 'ROS Distro (humble)'
+        required: true
+        default: humble
+
+jobs:
+  generate-Bt-Studio-docker-image:
+    uses: ./.github/workflows/generate_Bt_Studio.yml
+    with:
+      tag: ${{ github.event.inputs.tag }}
+      latest: ${{ github.event.inputs.latest }}
+      BT: ${{ github.event.inputs.BT }}
+      RI: ${{ github.event.inputs.RI }}
+      RAM: ${{ github.event.inputs.RAM }}
+      ROS: ${{ github.event.inputs.ROS }}
+  generate-Bt-Studio-database-docker-image:
+    uses: ./.github/workflows/generate_Bt_Studio_Database.yml
+    with:
+      tag: ${{ github.event.inputs.tag }}
+      latest: ${{ github.event.inputs.latest }}
+      BT: ${{ github.event.inputs.BT }}
+      RI: ${{ github.event.inputs.RIDB }}

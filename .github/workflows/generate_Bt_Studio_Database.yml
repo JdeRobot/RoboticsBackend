@@ -2,25 +2,50 @@
 name: Generate tagged Bt Studio Database image
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: test
+        type: string
+      latest:
+        description: 'Upload as latest'
+        required: true
+        default: false
+        type: boolean
+      BT:
+        description: 'Branch of RoboticsAcademy'
+        required: true
+        default: main
+        type: string
+      RI:
+        description: 'Branch of Robotics Infrastructure'
+        required: true
+        default: database
+        type: string
   workflow_dispatch:
     inputs:
       tag:
         description: 'Docker Image Tag'
         required: true
         default: test
+        type: string
       latest:
         description: 'Upload as latest'
-        type: boolean
         required: true
         default: false
+        type: boolean
       BT:
         description: 'Branch of RoboticsAcademy'
         required: true
         default: main
+        type: string
       RI:
         description: 'Branch of Robotics Infrastructure'
         required: true
         default: database
+        type: string
 
 jobs:
   push_to_registry:
