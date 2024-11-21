@@ -1,5 +1,5 @@
-# Generates and uploads an image of Bt-Studio and Bt-Studio database using the desired tag and branches
-name: Release new Bt Studio Version
+# Generates and uploads an image of Robotics Academy and Robotics Academy database using the desired tag and branches
+name: Release new Robotics Academy Version
 
 on:
   workflow_dispatch:
@@ -13,10 +13,10 @@ on:
         required: true
         default: true
         type: boolean
-      BT:
-        description: 'Branch of BT-Studio'
+      RA:
+        description: 'Branch of RoboticsAcademy'
         required: true
-        default: main
+        default: humble-devel
       RI:
         description: 'Branch of Robotics Infrastructure'
         required: true
@@ -35,23 +35,23 @@ on:
         default: humble
 
 jobs:
-  generate-Bt-Studio-docker-image:
-    name: Generate Bt-Studio Image
-    uses: ./.github/workflows/generate_Bt_Studio.yml
+  generate-RA-docker-image:
+    name: Generate Robotics Academy Image
+    uses: ./.github/workflows/generate_Robotics_Academy.yml
     with:
       tag: ${{ github.event.inputs.tag }}
       latest: ${{ inputs.latest }}
-      BT: ${{ github.event.inputs.BT }}
+      RA: ${{ github.event.inputs.RA }}
       RI: ${{ github.event.inputs.RI }}
       RAM: ${{ github.event.inputs.RAM }}
       ROS: ${{ github.event.inputs.ROS }}
     secrets: inherit
-  generate-Bt-Studio-database-docker-image:
-    name: Generate Bt-Studio Database Image
-    uses: ./.github/workflows/generate_Bt_Studio_Database.yml
+  generate-RA-database-docker-image:
+    name: Generate Robotics Academy Database Image
+    uses: ./.github/workflows/generate_Robotics_Database.yml
     with:
       tag: ${{ github.event.inputs.tag }}
       latest: ${{ inputs.latest }}
-      BT: ${{ github.event.inputs.BT }}
+      RA: ${{ github.event.inputs.RA }}
       RI: ${{ github.event.inputs.RIDB }}
     secrets: inherit
