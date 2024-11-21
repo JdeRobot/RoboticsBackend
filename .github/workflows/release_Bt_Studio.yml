@@ -39,7 +39,7 @@ jobs:
     uses: ./.github/workflows/generate_Bt_Studio.yml
     with:
       tag: ${{ github.event.inputs.tag }}
-      latest: ${{ inputs.latest }}
+      latest: ${{ inputs.latest == 'true' }}
       BT: ${{ github.event.inputs.BT }}
       RI: ${{ github.event.inputs.RI }}
       RAM: ${{ github.event.inputs.RAM }}
