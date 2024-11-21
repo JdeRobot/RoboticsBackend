@@ -30,7 +30,7 @@ This github action is prepared to package every image created by the Dockerfiles
 
 ### Github Action _Release Robotics Academy_
 
-This action should be used when releasing a new RoboticsAcademy version. You should not use this action when creating a beta or testing image. For that purpose use the ones below.
+This action should be used when releasing a new RoboticsAcademy version. **You should not use this action when creating a beta or testing image**. For that purpose use _Generate Robotics Academy_ or _Generate Robotics Academy Database_.
 
 This github action is prepared to call the actions _Generate Robotics Academy_ and _Generate Robotics Academy Database_. This github action needs some inputs:
 
@@ -82,7 +82,7 @@ This github action is prepared to package every image created by the Dockerfiles
 
 ### Github Action _Release Bt Studio_
 
-This action should be used when releasing a new Bt Studio version. You should not use this action when creating a beta or testing image. For that purpose use the ones below.
+This action should be used when releasing a new Bt Studio version. **You should not use this action when creating a beta or testing image**. For that purpose use _Generate Bt Studio_ or _Generate Bt Studio Database_.
 
 This github action is prepared to call the actions _Generate Bt Studio_ and _Generate Bt Studio Database_. This github action needs some inputs:
 
