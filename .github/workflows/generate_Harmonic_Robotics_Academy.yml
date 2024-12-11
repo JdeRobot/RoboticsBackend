@@ -1,5 +1,5 @@
 # Generates and uploads an image of Robotics-Academy using the desired tag and branches
-name: Generate tagged RoboticsAcademy image
+name: Generate tagged Harmonic RoboticsAcademy image
 
 on:
   workflow_call:
