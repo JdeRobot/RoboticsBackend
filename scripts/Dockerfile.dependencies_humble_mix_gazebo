@@ -177,7 +177,13 @@ RUN apt-get update && apt-get install -y \
     rsync \
     shellcheck \
     libgazebo11-dev \
-  && rm -rf /var/lib/apt/lists/*
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    libgstreamer-plugins-base1.0-dev \
+    libimage-exiftool-perl \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install PX4
 RUN git clone -b v1.14.0 https://github.com/PX4/PX4-Autopilot.git --recursive \
