@@ -90,20 +90,3 @@ jobs:
         run: |
             docker image tag jderobot/robotics-backend:${{ github.event.inputs.tag }} jderobot/robotics-backend:latest
             docker push jderobot/robotics-backend:latest
-
-#      - name: Build base image
-#        uses: docker/build-push-action@v2
-#        with:
-#          push: true
-#          tags: localhost:5000/robotics-applications:dependencies-****
-#          context: business
-#          file: business/Dockerfile
-#      - name: Build and push RADI
-#        uses: docker/build-push-action@v2
-#        with:
-#          push: true
-#          tags: my-ecr-repo/service
-#          context: service
-#          file: service/Dockerfile
-#          build-args: |
-#            BASE_IMAGE=localhost:5000/my-project/base
