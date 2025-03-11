@@ -31,9 +31,6 @@ WORKDIR /home/ws
 RUN /bin/bash -c "source /home/drones_ws/install/setup.bash"
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --symlink-install"
 
-# Django server
-EXPOSE 7164
-
 # Manager websocket
 EXPOSE 7163
 
