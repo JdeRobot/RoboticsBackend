@@ -29,10 +29,8 @@ RUN chmod +x /start_vnc.sh /kill_all.sh /entrypoint.sh /start_vnc_gpu.sh /set_dr
 # Compiling and sourcing the workspace
 WORKDIR /home/ws
 RUN /bin/bash -c "source /home/drones_ws/install/setup.bash"
+RUN /bin/bash -c "source /home/industrial_ws/install/setup.bash"
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --symlink-install"
-
-# Django server
-EXPOSE 7164
 
 # Manager websocket
 EXPOSE 7163
