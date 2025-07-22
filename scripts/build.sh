@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Default branch if not specified
-ROBOTICS_ACADEMY="master"
-ROBOTICS_INFRASTRUCTURE="noetic-devel"
-RAM="main"
-ROS_DISTRO="noetic"
+ROBOTICS_ACADEMY="humble-devel"
+ROBOTICS_INFRASTRUCTURE="humble-devel"
+RAM="humble-devel"
+ROS_DISTRO="humble"
 IMAGE_TAG="test"
 FORCE_BUILD=false
 
@@ -105,4 +105,4 @@ docker build --no-cache -f $DOCKERFILE \
   --build-arg RAM=$RAM \
   --build-arg ROS_DISTRO=$ROS_DISTRO \
   --build-arg IMAGE_TAG=$IMAGE_TAG \
-  -t jderobot/robotics-academy:$IMAGE_TAG .
+  -t jderobot/robotics-backend:$IMAGE_TAG .
