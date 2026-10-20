@@ -4,7 +4,7 @@ WORKDIR /
 
 # RoboticsInfrasctructure Repository
 ARG ROBOTICS_INFRASTRUCTURE=$ROBOTICS_INFRASTRUCTURE
-# Launchers/, Worlds/, Universes/ are intentionally retained in /opt/jderobot (hardcoded in all launch files).
+# Launchers/, Scenes/, Universes/ are intentionally retained in /opt/jderobot (hardcoded in all launch files).
 # Only .git history is stripped to recover extra space.
 RUN mkdir -p /opt/jderobot /home/ws/src && \
     git clone --depth 1 https://github.com/JdeRobot/RoboticsInfrastructure.git -b $ROBOTICS_INFRASTRUCTURE /opt/jderobot && \
@@ -29,10 +29,8 @@ ENV IMAGE_TAG=${IMAGE_TAG}
 
 # Clone the RoboticsApplicationManager repository into the src folder inside RoboticsAcademy
 RUN python3 -m pip install --no-cache-dir robotics_application_manager
-
 # Compiling and sourcing the workspace
 WORKDIR /home/ws
-RUN /bin/bash -c "source /home/drones_ws/install/setup.bash"
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --symlink-install --packages-ignore gz_ros2_control gz_ros2_control_demos"
 
 # Manager websocket
