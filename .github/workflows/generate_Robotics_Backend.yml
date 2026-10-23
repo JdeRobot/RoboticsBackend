@@ -22,14 +22,23 @@ on:
         required: true
         default: humble-devel
       ROS:
-        description: 'ROS Distro (humble)'
+        description: 'ROS Distro (humble, lyrical)'
         required: true
         default: humble
+      arch:
+        description: 'Architecture (arm64 only for lyrical, its tag gets the -arm64 suffix)'
+        type: choice
+        options:
+          - amd64
+          - arm64
+        default: amd64
 
 jobs:
   push_to_registry:
     name: Run Test and Update Docker Image
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
+    env:
+      TAG: ${{ github.event.inputs.arch == 'arm64' && format('{0}-arm64', github.event.inputs.tag) || github.event.inputs.tag }}
     steps:
       - name: Check out the repo # checking our the code at current commit that triggers the workflow
         uses: actions/checkout@v3
@@ -71,6 +80,8 @@ jobs:
           cd scripts
           if [ "${{ github.event.inputs.ROS }}" == "humble" ]; then
             docker build -f Dockerfile.dependencies_humble -t jderobot/robotics-applications:dependencies-humble .
+          elif [ "${{ github.event.inputs.ROS }}" == "lyrical" ]; then
+            docker build -f Dockerfile.dependencies_lyrical -t jderobot/robotics-applications:dependencies-lyrical .
           else
             echo "Incorrect ROS version"
           fi
@@ -86,12 +97,20 @@ jobs:
               --build-arg IMAGE_TAG=${{ github.event.inputs.tag }} \
               -t jderobot/robotics-backend:${{ github.event.inputs.tag }} .
             docker push jderobot/robotics-backend:${{ github.event.inputs.tag }}
+          elif [ "${{ github.event.inputs.ROS }}" == "lyrical" ]; then
+            docker build --no-cache -f Dockerfile.lyrical \
+              --build-arg ROBOTICS_INFRASTRUCTURE=${{ github.event.inputs.RI }} \
+              --build-arg RAM=${{ github.event.inputs.RAM }} \
+              --build-arg ROS_DISTRO=${{ github.event.inputs.ROS }} \
+              --build-arg IMAGE_TAG=${TAG} \
+              -t jderobot/robotics-backend:${TAG} .
+            docker push jderobot/robotics-backend:${TAG}
           else
             echo "Incorrect ROS version"
           fi
 
       - name: Upload as Latest
-        if:  ${{ inputs.latest }} 
+        if:  ${{ inputs.latest && inputs.arch != 'arm64' }} 
         run: |
             docker image tag jderobot/robotics-backend:${{ github.event.inputs.tag }} jderobot/robotics-backend:latest
             docker push jderobot/robotics-backend:latest
