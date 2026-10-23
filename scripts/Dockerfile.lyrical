@@ -1,0 +1,58 @@
+FROM jderobot/robotics-applications:dependencies-lyrical
+
+WORKDIR /
+
+# RoboticsInfrasctructure Repository
+ARG ROBOTICS_INFRASTRUCTURE=$ROBOTICS_INFRASTRUCTURE
+# Launchers/, Worlds/, Universes/ are intentionally retained in /opt/jderobot (hardcoded in all launch files).
+# Only .git history is stripped to recover extra space.
+RUN mkdir -p /opt/jderobot /home/ws/src && \
+    git clone --depth 1 https://github.com/JdeRobot/RoboticsInfrastructure.git -b $ROBOTICS_INFRASTRUCTURE /opt/jderobot && \
+    mv /opt/jderobot/CustomRobots /opt/jderobot/jderobot_drones /opt/jderobot/jderobot_drones_cpp /opt/jderobot/Industrial /opt/jderobot/common_interfaces_cpp /home/ws/src/ && \
+    mv /opt/jderobot/resources /resources && \
+    mv -t / /opt/jderobot/scripts/.env /opt/jderobot/scripts/entrypoint.sh /opt/jderobot/scripts/ram_entrypoint.py /opt/jderobot/scripts/test/check_device.py /opt/jderobot/scripts/set_dri_name.sh /opt/jderobot/scripts/check_ram_version.sh && \
+    mv -f /opt/jderobot/scripts/rc.xml /etc/xdg/openbox/LXDE/rc.xml && \
+    mkdir /etc/traefik && mv /opt/jderobot/scripts/proxy/* /etc/traefik/ && \
+    chmod +x /entrypoint.sh /set_dri_name.sh && \
+    rm -rf /opt/jderobot/.git \
+    /opt/jderobot/.github \
+    /opt/jderobot/database \
+    /opt/jderobot/deprecated_assets \
+    /opt/jderobot/Docs \
+    /opt/jderobot/scripts \
+    /opt/jderobot/test \
+    /opt/jderobot/Universes \
+    /opt/jderobot/utils \
+    && rm -f /opt/jderobot/Scenes/*.glb
+
+RUN rm /etc/xdg/autostart/lxpolkit.desktop
+RUN rm /usr/bin/lxpolkit
+
+# Install traefik, it serves RAM and the tools behind port 7163
+ARG TARGETARCH
+RUN wget https://github.com/traefik/traefik/releases/download/v3.7.14/traefik_v3.7.14_linux_${TARGETARCH}.tar.gz && tar -xzf traefik_*.tar.gz && mv traefik /usr/bin/ && rm traefik_*.tar.gz
+
+ARG IMAGE_TAG
+ENV IMAGE_TAG=${IMAGE_TAG}
+
+# Clone the RoboticsApplicationManager repository, its PyPI release targets Humble
+ARG RAM=$RAM
+RUN git clone --depth 1 https://github.com/JdeRobot/RoboticsApplicationManager.git -b $RAM /RoboticsApplicationManager && \
+    rm -rf /RoboticsApplicationManager/.git
+
+# Compiling and sourcing the workspace
+WORKDIR /home/ws
+RUN /bin/bash -c "source /opt/ros/lyrical/setup.bash; colcon build --symlink-install --continue-on-error; exit 0"
+# Retry failed packages once since parallel builds under emulation fail intermittently
+RUN /bin/bash -c "source /opt/ros/lyrical/setup.bash; colcon build --symlink-install --continue-on-error --packages-select-build-failed; exit 0"
+RUN mv /usr/share/xsessions/LXDE.desktop /usr/share/xsessions/startlxde.desktop
+RUN python3.14 -m pip install --no-cache-dir websockets "fastapi[standard]" uvicorn sh asyncssh python-lsp-server
+
+# Manager websocket and tools, behind traefik
+EXPOSE 7163
+
+WORKDIR /
+
+# Setting environment in both interactive or non-interactive shells
+ENV BASH_ENV=/.env
+ENTRYPOINT ["./entrypoint.sh", "-ns"]
