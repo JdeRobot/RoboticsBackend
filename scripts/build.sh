@@ -19,7 +19,7 @@ Help()
    echo "  -a, --academy       <value>  Branch of RoboticsAcademy.               Default: humble-devel"
    echo "  -i, --infra         <value>  Branch of RoboticsInfrastructure.        Default: humble-devel"
    echo "  -m, --ram           <value>  Branch of RoboticsApplicationManager.    Default: humble-devel"
-   echo "  -r, --ros           <value>  ROS Distro (humble).                     Default: humble"
+   echo "  -r, --ros           <value>  ROS Distro (humble, lyrical).            Default: humble"
    echo "  -t, --tag           <value>  Tag name of the image.                   Default: test"
    echo
    echo "Example:"
@@ -81,8 +81,11 @@ echo
 if [[ $ROS_DISTRO == "humble" ]]; then
     DOCKERFILE_BASE="Dockerfile.dependencies_humble"
     DOCKERFILE="Dockerfile.humble"
+elif [[ $ROS_DISTRO == "lyrical" ]]; then
+    DOCKERFILE_BASE="Dockerfile.dependencies_lyrical"
+    DOCKERFILE="Dockerfile.lyrical"
 else
-    echo "Error: Unknown ROS_DISTRO ($ROS_DISTRO). Please set it to 'humble'."
+    echo "Error: Unknown ROS_DISTRO ($ROS_DISTRO). Please set it to 'humble' or 'lyrical'."
     exit 1
 fi
 
@@ -96,7 +99,7 @@ if $FORCE_BUILD_NO_CACHE || $FORCE_BUILD || [[ "$(docker images -q jderobot/robo
   echo "===================== BUILDING $ROS_DISTRO BASE IMAGE ====================="
   echo "Building base using $DOCKERFILE_BASE for ROS $ROS_DISTRO"
   docker build $NO_CACHE -f $DOCKERFILE_BASE \
-    --build-arg TARGETARCH=$(uname -m | sed 's/x86_64/amd64/;s/arm64/arm64/') \
+    --build-arg TARGETARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/') \
     -t jderobot/robotics-applications:dependencies-$ROS_DISTRO .
 fi
 
